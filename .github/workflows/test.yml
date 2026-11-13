@@ -1,4 +1,4 @@
-name: Test Project 
+name: Deploy Project 
 on: push
 jobs:
   test:
@@ -19,3 +19,23 @@ jobs:
         run: npm ci
       - name: Run Tests
         run: npm test
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02 Starting Project
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: "02 Starting Project/package-lock.json"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build project
+        run: npm run build
+      - name: Deploy project
+        run: echo "Deploying project..."

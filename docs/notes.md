@@ -32,3 +32,5 @@ Workflows is attached to a repository.
 Jobs require a defined runner. contains one or more steps. Run in parallel or sequential. Can be conditional
 
 Steps execute a shell script or action. use custom or third party actions. Executed in order. Can be conditional
+
+## Events (Workflow Triggers)

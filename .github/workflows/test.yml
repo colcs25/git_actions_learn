@@ -3,6 +3,9 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02 Starting Project
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

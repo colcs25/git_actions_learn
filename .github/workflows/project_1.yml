@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: project/04 Practice Project
+        working-directory: "project/04 Practice Project"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: project/04 Practice Project
+        working-directory: "project/04 Practice Project"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: project/04 Practice Project
+        working-directory: "project/04 Practice Project"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

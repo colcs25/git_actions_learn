@@ -35,16 +35,76 @@ Steps execute a shell script or action. use custom or third party actions. Execu
 
 ## Events (Workflow Triggers)
 
-### Repository related triggers:
-push
-commit
-issue
-pull
-fork
-create
-Pull request
+Events are defined under `on:` and decide **when** a workflow runs.
 
-### Others:
-workflow_dispatch
-workflow_calls
-schedule
+### Repository-related events
+| Event | Triggers when… |
+|---|---|
+| `push` | Commits are pushed to a branch, or a tag is pushed |
+| `pull_request` | Activity on a PR (opened, updated, reopened, etc.) |
+| `pull_request_target` | Like `pull_request`, but runs in the context of the **base** branch with secrets access. Risky with forks |
+| `create` | A branch or tag is created |
+| `delete` | A branch or tag is deleted |
+| `fork` | Someone forks the repo |
+| `issues` | Activity on an issue (opened, edited, closed, labeled, …) |
+| `issue_comment` | A comment on an issue **or** a PR is created, edited or deleted |
+| `release` | A release is published, created, edited, … |
+| `watch` | Someone stars the repo |
+| `discussion` | Activity on a GitHub Discussion |
+
+> There is no `commit` event. Pushing commits triggers `push`.
+
+### Other events
+| Event | Triggers when… |
+|---|---|
+| `workflow_dispatch` | Manually, via the "Run workflow" button, the API or the CLI. Can take `inputs` |
+| `workflow_call` | Another workflow calls this one (makes it a **reusable workflow**) |
+| `schedule` | On a cron schedule (UTC). Shortest interval is every 5 min. Runs only on the default branch |
+| `repository_dispatch` | An external system sends a webhook via the GitHub API |
+| `workflow_run` | Another workflow completes or is requested (chains workflows) |
+
+### Multiple events
+```yaml
+on: [push, workflow_dispatch]          # list form
+```
+
+### Event filters and activity types
+
+**Activity types** control *which kind* of activity on an event triggers the workflow (`types:`):
+```yaml
+on:
+  pull_request:
+    types: [opened, edited, synchronize]   # synchronize = new commits pushed to the PR
+  issues:
+    types: [opened, labeled]
+```
+- If `types` is omitted, a **default set** is used. For `pull_request` that's `opened`, `synchronize` and `reopened`.
+
+**Filters** control *where* the event happened (branches, tags, paths):
+```yaml
+on:
+  push:
+    branches:
+      - main
+      - 'dev-*'          # glob: dev-new, dev-feature
+      - 'feat/**'        # ** matches slashes: feat/a/b
+    paths-ignore:
+      - '.github/workflows/*'   # don't run when only workflow files change
+  pull_request:
+    branches: [main]     # for PRs, this is the TARGET (base) branch
+```
+
+| Filter | Include | Exclude |
+|---|---|---|
+| Branches | `branches` | `branches-ignore` |
+| Tags | `tags` | `tags-ignore` |
+| File paths | `paths` | `paths-ignore` |
+
+- You can't use `branches` and `branches-ignore` together for the same event (same for `paths`). To include and exclude at once, use `!` negation in `branches`/`paths`, e.g. `'!docs/**'`.
+- If `branches` and `paths` are both set, **both** must match.
+
+### Exam gotchas
+- `pull_request` from a **fork**: no access to secrets, and `GITHUB_TOKEN` is read-only.
+- Workflows on `pull_request` from forks may need **maintainer approval** before they run.
+- Add `[skip ci]` (or `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`) to a commit message to skip `push`/`pull_request` workflows.
+- `schedule` and `workflow_dispatch` (button) only work from the **default branch**.

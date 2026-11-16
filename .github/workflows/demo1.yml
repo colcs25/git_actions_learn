@@ -15,7 +15,7 @@ jobs:
         working-directory: .
         env: 
           EVENT_JSON: ${{ toJSON(github.event) }}
-        run: echo "${{ toJSON(github.event) }}"
+        run: echo "$EVENT_JSON"
       - name: Get code
         uses: actions/checkout@v3
         with:

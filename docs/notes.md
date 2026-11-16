@@ -34,3 +34,17 @@ Jobs require a defined runner. contains one or more steps. Run in parallel or se
 Steps execute a shell script or action. use custom or third party actions. Executed in order. Can be conditional
 
 ## Events (Workflow Triggers)
+
+### Repository related triggers:
+push
+commit
+issue
+pull
+fork
+create
+Pull request
+
+### Others:
+workflow_dispatch
+workflow_calls
+schedule

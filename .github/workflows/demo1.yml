@@ -18,10 +18,6 @@ jobs:
         run: echo "$EVENT_JSON"
       - name: Get code
         uses: actions/checkout@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: "project/01 Starting Project/package-lock.json"
       - name: Install dependencies
         run: npm ci
       - name: Test code

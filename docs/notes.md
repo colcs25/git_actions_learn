@@ -108,3 +108,39 @@ on:
 - Workflows on `pull_request` from forks may need **maintainer approval** before they run.
 - Add `[skip ci]` (or `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`) to a commit message to skip `push`/`pull_request` workflows.
 - `schedule` and `workflow_dispatch` (button) only work from the **default branch**.
+
+### Skipping workflows
+
+To stop a commit from triggering workflows, add one of these to the **commit message** (brackets included):
+
+- `[skip ci]`
+- `[ci skip]`
+- `[no ci]`
+- `[skip actions]`
+- `[actions skip]`
+
+```bash
+git commit -m "Update README [skip ci]"
+```
+
+**Alternative: a commit trailer.** End the commit message with two empty lines, then:
+```
+skip-checks: true
+```
+
+**Rules**
+- Works only for `push` and `pull_request` triggered workflows. Other events (`workflow_dispatch`, `schedule`, …) still run.
+- For a pull request, the keyword must be in the **HEAD commit** (the latest commit on the PR branch).
+- The **whole workflow** is skipped, not individual jobs.
+- Watch out for **required status checks**: if branch protection requires a check from a skipped workflow, the check stays "pending" and the PR **can't be merged** until a new commit triggers the workflow.
+
+**Other ways to avoid unnecessary runs**
+- `paths-ignore` / `branches-ignore` filters under `on:` (e.g. skip when only `docs/**` changes)
+- `if:` conditions on jobs or steps for finer control:
+  ```yaml
+  jobs:
+    deploy:
+      if: github.ref == 'refs/heads/main'
+  ```
+
+## Job Artifacts

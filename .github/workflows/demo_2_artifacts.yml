@@ -39,9 +39,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "project/01 Starting Project new"
     steps:
       - name: Deploy
         run: echo "Deploying..."
